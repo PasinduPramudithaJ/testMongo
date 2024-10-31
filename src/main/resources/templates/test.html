@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        /* Background Image and Overlay */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('nature.jpeg'); /* Change this URL to any online image */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Container Style */
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* White background with transparency */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            transform: translateY(0);
+            animation: slideIn 0.5s forwards;
+            opacity: 0;
+        }
+
+        /* Slide In Animation */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        input[type="text"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border: 1px solid #0072ff;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>User Registration</h2>
+        <form id="contactForm">
+            <table border="0">
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" name="name" id="name" required></td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td><input type="text" name="address" id="address" required></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Submit"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <script>
+        // Ensure the function runs when the DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("contactForm").addEventListener("submit", async function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                const formData = {
+                    name: event.target.name.value,  // Get the value of the name input
+                    address: event.target.address.value // Get the value of the address input
+                };
+
+                // Send the form data to the server
+                await fetch("http://localhost:8080/students/addStudent", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData) // Convert the data to JSON
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Assuming the server responds with JSON
+                })
+                .then(data => {
+                    console.log('Success:', data); // Handle the response data
+                    alert('New user added');
+                    // Clear the form fields after successful submission
+                    event.target.reset(); // This will reset the form fields
+                })
+                .catch((error) => {
+                    console.error('Error:', error); // Handle any errors
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
